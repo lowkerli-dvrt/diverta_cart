@@ -1,0 +1,17 @@
+{
+  "database": {
+    "driver": "com.mysql.cj.jdbc.Driver",
+    "url_prefix": "jdbc:mysql",
+    "server": "localhost",
+    "database": "diverta_cart",
+    "user": "diverta_cart",
+    "password": "JuMoF18esama",
+    "serverTimezone": "Asia/Tokyo"
+  },
+  "server": {
+    "port": 10080
+  },
+  "ui": {
+    "autoBrowserLaunch": true
+  }
+}
