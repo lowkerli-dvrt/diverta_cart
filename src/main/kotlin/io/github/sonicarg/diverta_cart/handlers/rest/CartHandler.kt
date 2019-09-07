@@ -2,9 +2,9 @@ package io.github.sonicarg.diverta_cart.handlers.rest
 
 import io.github.sonicarg.diverta_cart.Product
 import io.github.sonicarg.diverta_cart.ProductsTable
-import io.javalin.http.*
+import io.javalin.http.Context
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.*
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object CartHandler {
     private fun initGetCart(ctx: Context): MutableMap<Product, Int> {
@@ -78,7 +78,7 @@ object CartHandler {
         val product = cartContents.keys.firstOrNull { it.sku == sku }
         if (product != null) {
             cartContents[product] = newQty
-            saveAndSend(ctx, 200, "Product quantity modified sucessfully", cartContents)
+            saveAndSend(ctx, 200, "Product quantity modified successfully", cartContents)
         }
         else
         {
@@ -120,5 +120,5 @@ data class ProcessedCart(private val _contents: MutableMap<Product, Int>) {
     }
     val numElements = contents.size
     val subTotal = _contents.map { it.key.price * it.value }.sum()
-    val tax = (subTotal * 0.1).toInt()
+    val tax = (subTotal * 0.1).toLong()
 }

@@ -9,9 +9,6 @@ import java.net.URI
 
 val APP_LOGGER = LoggerFactory.getLogger("main")!!
 
-@Volatile
-var keepRunning = true
-
 fun main() {
     APP_LOGGER.info("Starting application")
 
@@ -36,11 +33,10 @@ fun main() {
         }
     }
 
-    val mainThread = Thread.currentThread()
     Runtime.getRuntime().addShutdownHook(object : Thread() {
         override fun run() {
-            keepRunning = false
-            mainThread.join()
+            APP_LOGGER.info("A SIGINT (aka CTRL+C) signal was received. Shutting down now.")
+            CartServer.stop()
         }
     })
 }

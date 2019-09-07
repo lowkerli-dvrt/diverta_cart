@@ -1,9 +1,12 @@
 package io.github.sonicarg.diverta_cart
 
 import io.github.sonicarg.diverta_cart.handlers.rest.CartHandler
-import io.javalin.*
+import io.github.sonicarg.diverta_cart.handlers.rest.CheckoutHandler
+import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
-import org.eclipse.jetty.server.session.*
+import org.eclipse.jetty.server.session.DefaultSessionCache
+import org.eclipse.jetty.server.session.FileSessionDataStore
+import org.eclipse.jetty.server.session.SessionHandler
 import org.jetbrains.exposed.sql.Database
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -42,19 +45,24 @@ object CartServer: HttpServlet() {
 
 
         // === AJAX handlers ===
-        path("/ajax/cart") {
-            //List all elements on cart
-            get { ctx -> CartHandler.list(ctx) }
-            //Put an element in the cart given its SKU
-            post { ctx -> CartHandler.add(ctx) }
-            put  { ctx -> CartHandler.add(ctx) }
-            //Change the number of elements in the cart of a given SKU
-            patch { ctx -> CartHandler.changeQty(ctx) }
-            //Remove all instances of a given element in the cart (if a SKU is given)
-            //Empty the cart (if no SKU is given)
-            delete { ctx ->
-                if ("sku" in ctx.formParamMap()) CartHandler.remove(ctx)
-                else CartHandler.empty(ctx)
+        path("/ajax") {
+            path("cart") {
+                //List all elements on cart
+                get { ctx -> CartHandler.list(ctx) }
+                //Put an element in the cart given its SKU
+                post { ctx -> CartHandler.add(ctx) }
+                put { ctx -> CartHandler.add(ctx) }
+                //Change the number of elements in the cart of a given SKU
+                patch { ctx -> CartHandler.changeQty(ctx) }
+                //Remove all instances of a given element in the cart (if a SKU is given)
+                //Empty the cart (if no SKU is given)
+                delete { ctx ->
+                    if ("sku" in ctx.formParamMap()) CartHandler.remove(ctx)
+                    else CartHandler.empty(ctx)
+                }
+            }
+            path("checkout") {
+                post { ctx -> CheckoutHandler.doPayment(ctx) }
             }
         }
     }!!.events { events ->

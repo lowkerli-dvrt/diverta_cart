@@ -14,7 +14,6 @@ repositories {
     mavenCentral()
 }
 
-
 ext {
     kotlinVersion = "1.3.41"
 }
@@ -40,3 +39,26 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
  */
+
+launch4j {
+    mainClassName = "io.github.sonicarg.diverta_cart.MainKt"
+    dontWrapJar = true
+    headerType = "console"
+    icon = "${projectDir}/src/main/resources/static_www/favicon.ico"
+    version = "1.0"
+    textVersion = "1.0-SNAPSHOT"
+    copyright = "Designed by Francisco Cáneva - Sep 6 Reiwa 1 (2019)"
+    productName = "Diverta Shopping Cart"
+    language = "ENGLISH_UK"
+    jreMinVersion = "1.8.0"
+    jreMaxVersion = "10"
+}
+
+task configFilesLaunch4J(type: Copy) {
+    from fileTree(
+            dir: '.',
+            includes: ['config.json', 'var_www/**']
+    )
+    into 'build/launch4j'
+}
+configFilesLaunch4J.dependsOn(createAllExecutables, createExe)
