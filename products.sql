@@ -1,0 +1,3 @@
+USE diverta_cart;
+START TRANSACTION;
+COMMIT;
