@@ -2,8 +2,12 @@ package io.github.sonicarg.diverta_cart
 
 import io.github.sonicarg.diverta_cart.handlers.rest.CartHandler
 import io.github.sonicarg.diverta_cart.handlers.rest.CheckoutHandler
+import io.github.sonicarg.diverta_cart.handlers.www.CartPageHandler
+import io.github.sonicarg.diverta_cart.handlers.www.CheckoutPageHandler
+import io.github.sonicarg.diverta_cart.handlers.www.MainPageHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
+import io.javalin.http.staticfiles.Location
 import org.eclipse.jetty.server.session.DefaultSessionCache
 import org.eclipse.jetty.server.session.FileSessionDataStore
 import org.eclipse.jetty.server.session.SessionHandler
@@ -21,14 +25,16 @@ object CartServer: HttpServlet() {
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val server = Javalin.create { config ->
 
+        config.showJavalinBanner = false
         config.enableCorsForAllOrigins()
+        config.addStaticFiles("static_www", Location.CLASSPATH)
+        config.addStaticFiles("var_www", Location.EXTERNAL)
 
         config.sessionHandler(CartServer::serverSessionHandler)
         config.requestLogger { ctx, timeMs ->
             val message = if (ctx.queryString().isNullOrEmpty()) {
                 "${ctx.method()} ${ctx.path()} = ${ctx.status()} ($timeMs ms)"
-            }
-            else {
+            } else {
                 "${ctx.method()} ${ctx.path()}?${ctx.queryString()} = ${ctx.status()} ($timeMs ms)"
             }
             when (ctx.status()) {
@@ -43,6 +49,18 @@ object CartServer: HttpServlet() {
             ctx.res.characterEncoding = StandardCharsets.UTF_8.toString()
         }
 
+        // === Web handlers ===
+        path("/") {
+            // Homepage showing all elements for buy
+            get { ctx -> MainPageHandler.show(ctx) }
+        }
+        path("/cart") {
+            get { ctx -> CartPageHandler.show(ctx) } // CartPageHandler.show(ctx) }
+        }
+        path("/checkout") {
+            get { ctx -> CheckoutPageHandler.show(ctx) } // CheckoutPageHandler.show(ctx) }
+            post { ctx -> CheckoutPageHandler.performPayment(ctx) } // CheckoutPageHandler.doPayment(ctx) }
+        }
 
         // === AJAX handlers ===
         path("/ajax") {

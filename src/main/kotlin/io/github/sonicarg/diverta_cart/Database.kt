@@ -1,7 +1,5 @@
 package io.github.sonicarg.diverta_cart
 
-import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.dao.IdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.json.JSONObject
@@ -102,6 +100,15 @@ fun databaseInitIfEmpty() {
                 ShippingRegionTable,
                 ShippingPriceTable
             )
+
+            ProductsTable.batchInsert(
+                listOf(
+                    // Product: SKU, Name/Description, Price (JPY)
+                    Product(619659078465, "SanDisk uSD card 32GB C10", 1799)
+                )
+            ) {
+                this[ProductsTable.sku] = it.sku
+            }
 
             ShippingRegionTable.batchInsert(
                 listOf(

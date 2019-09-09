@@ -1,0 +1,63 @@
+nav {
+  position: fixed;
+  top: 0;
+  padding: 0 16px 0 16px !important;
+}
+
+.navbar-brand {
+  font-size: 2rem;
+}
+
+nav form {
+    margin-block-end: 0 !important;
+}
+
+main {
+  padding: 64px 16px 64px 16px !important;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.card-img-top {
+  display: block;
+  max-height: 300px;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+}
+
+.icon {
+  display: block;
+  max-height: 32px;
+  width: auto;
+  height: auto;
+  margin: 2px 8px 2px 8px;
+}
+
+.icon-2 {
+  display: block;
+  max-height: 64px;
+  width: auto;
+  height: auto;
+  margin: 2px 8px 2px 8px;
+}
+
+td {
+  padding: 2px 6px;
+}
+
+td.w-60 {
+  width: 60%;
+}
+
+td.w-30 {
+  width: 30%;
+}
+
+td.w-10 {
+  width: 10%;
+}
