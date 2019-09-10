@@ -2,6 +2,10 @@ package io.github.sonicarg.diverta_cart.handlers.www
 
 import io.javalin.http.Context
 import kotlinx.html.*
+import java.text.DecimalFormat
+
+private val currencyFormatterJPY = DecimalFormat("#&nbsp;###")
+fun currencyFormat(price: Long) = "JPY&nbsp;&nbsp;" + currencyFormatterJPY.format(price)
 
 fun BODY.navbar(ctx: Context) = header {
     nav("navbar navbar-expand-md navbar-dark fixed-top bg-primary") {
@@ -36,7 +40,12 @@ fun BODY.navbar(ctx: Context) = header {
                 }
                 li("nav-item " + if (ctx.path() == "/cart") "active" else "inactive") {
                     a("/cart", classes = "nav-link") {
-                        text("Cart (---)")
+                        text("Cart (")
+                        span {
+                            id = "cartTotals"
+                            text("---")
+                        }
+                        text(")")
                         Entities.nbsp
                         if (ctx.path() == "/cart") {
                             span("sr-only") { text("(current)") }
@@ -97,6 +106,7 @@ fun BODY.footer() = footer("footer bg-secondary") {
 
 val PACKAGES_VERSIONS = mapOf(
     "_diverta-cart" to "SNAPSHOT",
+    "accounting.js" to "0.4.2",
     "bootstrap" to "4.1.3",
     "bootswatch" to "4.3.1",
     "creationix" to "gist-7435851",
@@ -137,6 +147,7 @@ fun BODY.commonJS() {
     loadJS("bootstrap", "bootstrap.bundle.min.js")
     loadJS("fontawesome-free", "all.min.js")
     loadJS("toastr", "toastr.min.js")
+    loadJS("accounting.js", "accounting.min.js")
 
     loadJS("_diverta-cart", "main.js")
 }
