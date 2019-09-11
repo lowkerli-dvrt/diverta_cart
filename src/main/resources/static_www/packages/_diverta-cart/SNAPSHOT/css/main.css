@@ -70,3 +70,15 @@ td.w-30 {
 td.w-10 {
   width: 10%;
 }
+
+.z-1000 {
+  z-index: 1000 !important;
+}
+
+.z-1030 {
+  z-index: 1030 !important;
+}
+
+.z-1050 {
+  z-index: 1050 !important;
+}

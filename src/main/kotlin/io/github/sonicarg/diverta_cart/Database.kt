@@ -48,15 +48,17 @@ data class ShippingRegion(
     var id: Int,
     var name: String
 ) {
-    fun fromResultRow(rr: ResultRow) = ShippingRegion(
-        rr[ShippingRegionTable.id],
-        rr[ShippingRegionTable.name]
-    )
+    companion object {
+        fun fromResultRow(rr: ResultRow) = ShippingRegion(
+            rr[ShippingRegionTable.id],
+            rr[ShippingRegionTable.name]
+        )
 
-    fun fromJSON(json: JSONObject) = ShippingRegion(
-        json.getInt("id"),
-        json.getString("name")
-    )
+        fun fromJSON(json: JSONObject) = ShippingRegion(
+            json.getInt("id"),
+            json.getString("name")
+        )
+    }
 }
 
 object ShippingPriceTable : Table("shipping") {
@@ -75,21 +77,23 @@ data class ShippingPrice(
     var price: Long,
     var delay: Int
 ) {
-    fun fromResultRow(rr: ResultRow) = ShippingPrice(
-        rr[ShippingPriceTable.id],
-        rr[ShippingPriceTable.name],
-        rr[ShippingPriceTable.region],
-        rr[ShippingPriceTable.price],
-        rr[ShippingPriceTable.delay]
-    )
+    companion object {
+        fun fromResultRow(rr: ResultRow) = ShippingPrice(
+            rr[ShippingPriceTable.id],
+            rr[ShippingPriceTable.name],
+            rr[ShippingPriceTable.region],
+            rr[ShippingPriceTable.price],
+            rr[ShippingPriceTable.delay]
+        )
 
-    fun fromJSON(json: JSONObject) = ShippingPrice(
-        json.getInt("id"),
-        json.getString("name"),
-        json.getInt("region"),
-        json.getLong("price"),
-        json.getInt("delay")
-    )
+        fun fromJSON(json: JSONObject) = ShippingPrice(
+            json.getInt("id"),
+            json.getString("name"),
+            json.getInt("region"),
+            json.getLong("price"),
+            json.getInt("delay")
+        )
+    }
 }
 
 object PrefectureTable: Table("prefecture") {
@@ -101,15 +105,17 @@ data class Prefecture(
     var name: String,
     var region: Int
 ) {
-    fun fromResultRow(rr: ResultRow) = Prefecture(
-        rr[PrefectureTable.name],
-        rr[PrefectureTable.region]
-    )
+    companion object {
+        fun fromResultRow(rr: ResultRow) = Prefecture(
+            rr[PrefectureTable.name],
+            rr[PrefectureTable.region]
+        )
 
-    fun fromJSON(json: JSONObject) = Prefecture(
-        json.getString("name"),
-        json.getInt("region")
-    )
+        fun fromJSON(json: JSONObject) = Prefecture(
+            json.getString("name"),
+            json.getInt("region")
+        )
+    }
 }
 
 // --- Routine to initialize the database ---

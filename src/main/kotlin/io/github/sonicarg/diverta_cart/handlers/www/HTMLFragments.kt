@@ -2,17 +2,13 @@ package io.github.sonicarg.diverta_cart.handlers.www
 
 import io.javalin.http.Context
 import kotlinx.html.*
-import java.text.DecimalFormat
-
-private val currencyFormatterJPY = DecimalFormat("#&nbsp;###")
-fun currencyFormat(price: Long) = "JPY&nbsp;&nbsp;" + currencyFormatterJPY.format(price)
 
 fun BODY.navbar(ctx: Context) = header {
-    nav("navbar navbar-expand-md navbar-dark fixed-top bg-primary") {
+    nav("navbar navbar-expand-md navbar-dark fixed-top bg-primary z-1030") {
         a(classes = "navbar-brand") {
             i("fas fa-microchip") { }
             text("Nipp")
-            i("fas fa-circle text-danger text-small") { }
+            i("fas fa-circle text-danger") { }
             text("nTech")
         }
         button(type = ButtonType.button, classes = "navbar-toggler") {
@@ -52,15 +48,6 @@ fun BODY.navbar(ctx: Context) = header {
                         }
                     }
                 }
-                li("nav-item " + if (ctx.path() == "/checkout") "active" else "inactive") {
-                    a("/checkout", classes = "nav-link " + if (ctx.path() == "/") "disabled" else "enabled") {
-                        text("Checkout")
-                        Entities.nbsp
-                        if (ctx.path() == "/checkout") {
-                            span("sr-only") { text("(current)") }
-                        }
-                    }
-                }
             }
             form(action = "/", method = FormMethod.get, classes = "form-inline") {
                 textInput(
@@ -80,13 +67,13 @@ fun BODY.navbar(ctx: Context) = header {
     }
 }
 
-fun BODY.footer() = footer("footer bg-secondary") {
+fun BODY.footer() = footer("footer bg-secondary z-1030") {
     div("container") {
         div("row") {
             div("col mt-3") {
                 p("mb-1") { text("\u24b8 Francisco Cáneva, 2019") }
             }
-            div("col") { }
+            div("col")
             div("col mt-2") {
                 p("mb-1") {
                     h4("text-right") {
@@ -108,6 +95,7 @@ val PACKAGES_VERSIONS = mapOf(
     "_diverta-cart" to "SNAPSHOT",
     "accounting.js" to "0.4.2",
     "bootstrap" to "4.1.3",
+    "bootstrap-select" to "1.13.9",
     "bootswatch" to "4.3.1",
     "creationix" to "gist-7435851",
     "fontawesome-free" to "5.10.2",

@@ -31,7 +31,7 @@ object MainPageHandler {
         val renderedHTML = createHTML().html {
             head {
                 meta { charset = "UTF-8" }
-                title("NipponTech | Home page")
+                title("Home page | NipponTech")
                 link("/favicon.ico", "shortcut icon")
                 commonCSS()
             }

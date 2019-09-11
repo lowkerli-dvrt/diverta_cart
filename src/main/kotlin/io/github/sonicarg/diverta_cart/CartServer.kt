@@ -2,6 +2,7 @@ package io.github.sonicarg.diverta_cart
 
 import io.github.sonicarg.diverta_cart.handlers.rest.CartHandler
 import io.github.sonicarg.diverta_cart.handlers.rest.CheckoutHandler
+import io.github.sonicarg.diverta_cart.handlers.rest.ShippingHandler
 import io.github.sonicarg.diverta_cart.handlers.www.CartPageHandler
 import io.github.sonicarg.diverta_cart.handlers.www.CheckoutPageHandler
 import io.github.sonicarg.diverta_cart.handlers.www.MainPageHandler
@@ -65,9 +66,15 @@ class CartServer(configJSON: JSONObject = JSONObject()) : HttpServlet() {
             }
         }!!.routes {
             before { ctx ->
+                // Make sure we all speak in UTF8
                 ctx.res.characterEncoding = StandardCharsets.UTF_8.toString()
 
-                //Update VAT value directly in the context
+                // Initialize the cart if it does not exist
+                if ("cart" !in ctx.sessionAttributeMap<MutableMap<Product, Int>>()) {
+                    ctx.sessionAttribute("cart", mutableMapOf<Product, Int>())
+                }
+
+                // Update VAT value directly in the context
                 val contextVAT = ctx.sessionAttribute<Double?>("vat")
                 if ( contextVAT == null || contextVAT != vat) {
                     ctx.sessionAttribute("vat", vat)
@@ -83,8 +90,7 @@ class CartServer(configJSON: JSONObject = JSONObject()) : HttpServlet() {
                 get { ctx -> CartPageHandler.show(ctx) } // CartPageHandler.show(ctx) }
             }
             path("/checkout") {
-                get { ctx -> CheckoutPageHandler.show(ctx) } // CheckoutPageHandler.show(ctx) }
-                post { ctx -> CheckoutPageHandler.performPayment(ctx) } // CheckoutPageHandler.doPayment(ctx) }
+                post { ctx -> CheckoutPageHandler.show(ctx) } // CheckoutPageHandler.show(ctx) }
             }
 
             // === AJAX handlers ===
@@ -106,6 +112,9 @@ class CartServer(configJSON: JSONObject = JSONObject()) : HttpServlet() {
                 }
                 path("checkout") {
                     post { ctx -> CheckoutHandler.doPayment(ctx) }
+                }
+                path("shipping") {
+                    get { ctx -> ShippingHandler.list(ctx) }
                 }
             }
         }!!.events { events ->

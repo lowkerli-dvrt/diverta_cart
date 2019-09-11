@@ -8,13 +8,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object CartHandler {
-    private fun initGetCart(ctx: Context): MutableMap<Product, Int> {
-        if ("cart" !in ctx.sessionAttributeMap<MutableMap<Product, Int>>()) {
-            ctx.sessionAttribute("cart", mutableMapOf<Product, Int>())
-        }
-        return ctx.sessionAttribute<MutableMap<Product, Int>>("cart")!!
-    }
-
     private fun saveAndSend(ctx: Context, status: Int, message: String, cart: MutableMap<Product, Int>) {
         //Ensure all products in cart exists
         val productsDB = transaction {
@@ -39,11 +32,11 @@ object CartHandler {
     }
 
     fun list(ctx: Context) {
-        saveAndSend(ctx, 200, "Listing cart contents", initGetCart(ctx))
+        saveAndSend(ctx, 200, "Listing cart contents", ctx.sessionAttribute<MutableMap<Product, Int>>("cart")!!)
     }
 
     fun add(ctx: Context) {
-        val cartContents = initGetCart(ctx)
+        val cartContents = ctx.sessionAttribute<MutableMap<Product, Int>>("cart")!!
         val sku = ctx.formParam("sku")
         if (sku == null) {
             saveAndSend(ctx, 400, "No product SKU was given", cartContents)
@@ -69,7 +62,7 @@ object CartHandler {
     }
 
     fun changeQty(ctx: Context) {
-        val cartContents = initGetCart(ctx)
+        val cartContents = ctx.sessionAttribute<MutableMap<Product, Int>>("cart")!!
         val sku = ctx.formParam("sku")
         if (sku == null) {
             saveAndSend(ctx, 400, "No product SKU was given", cartContents)
@@ -102,7 +95,7 @@ object CartHandler {
     }
 
     fun remove(ctx: Context) {
-        val cartContents = initGetCart(ctx)
+        val cartContents = ctx.sessionAttribute<MutableMap<Product, Int>>("cart")!!
         // 'sku' nullity has been already tested, we can assure that 'sku' won't be null (!!)
         val sku = ctx.formParam("sku")!!
         val product = cartContents.keys.firstOrNull { it.sku == sku }
@@ -116,23 +109,19 @@ object CartHandler {
     }
 
     fun empty(ctx: Context) {
-        val cartContents = initGetCart(ctx)
+        val cartContents = ctx.sessionAttribute<MutableMap<Product, Int>>("cart")!!
         cartContents.clear()
         saveAndSend(ctx, 200, "Cart emptied", cartContents)
     }
 }
 
-@Suppress("MemberVisibilityCanBePrivate", "unused")
+data class ProcessedCartItem(val sku: String, val name: String, val unitPrice: Long, val quantity: Int
+) {
+    val price: Long = unitPrice * quantity
+}
+
 data class ProcessedCart(private val _contents: MutableMap<Product, Int>, private val _vat: Double) {
-    val contents = _contents.map {
-        mapOf(
-            "sku" to it.key.sku,
-            "name" to it.key.name,
-            "unitPrice" to it.key.price,
-            "quantity" to it.value,
-            "price" to it.key.price * it.value
-        )
-    }
+    val contents = _contents.map { ProcessedCartItem(it.key.sku, it.key.name, it.key.price, it.value) }
     val numProducts = contents.size
     val numElements = _contents.values.sum()
     val subTotal = _contents.map { it.key.price * it.value }.sum()

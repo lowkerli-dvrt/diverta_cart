@@ -6,6 +6,12 @@ import kotlinx.html.stream.createHTML
 
 object CheckoutPageHandler {
     fun show(ctx: Context) {
+        val total = ctx.formParam("tt")?.toLongOrNull()
+        val region = ctx.formParam("region")?.toIntOrNull()
+        if (total == null || region == null) {
+            ctx.status(500)
+        }
+
         val renderedHTML = createHTML().html {
             head {
                 meta { charset = "UTF-8" }
@@ -19,7 +25,8 @@ object CheckoutPageHandler {
                     a { id = "top" }
 
                     // Content of page begins here
-
+                    p { text("Total: $total")}
+                    p { text("Region: $region")}
 
                 }
                 footer()
