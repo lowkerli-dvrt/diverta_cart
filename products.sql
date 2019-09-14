@@ -11,14 +11,17 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Volcando datos para la tabla diverta_cart.products: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla diverta_cart.products: ~4 rows (aproximadamente)
 DELETE FROM `products`;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
 INSERT INTO `products` (`sku`, `name`, `price`) VALUES
-	('020356620370', 'TDK Blank CD - 100 unit bulk', 1689),
-	('619659078645', 'Sandisk microSD card 32GB, Class 10', 990),
+	('0020356620370', 'TDK Blank CD - 100 unit bulk', 1689),
+	('0619659078645', 'Sandisk microSD card 32GB, Class 10', 990),
+	('0794163167471', 'HeimVision 1080p WiFi IP Camera', 2999),
 	('6935364050993', 'TP-LINK WiFi Router AC1200 (802.11ac)', 3399);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
+
+SELECT * FROM `products`;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

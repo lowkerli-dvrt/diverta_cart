@@ -1,5 +1,6 @@
 package io.github.sonicarg.diverta_cart
 
+import org.joda.time.format.DateTimeFormat
 import org.json.JSONObject
 import org.json.JSONTokener
 import org.slf4j.LoggerFactory
@@ -8,6 +9,7 @@ import java.io.FileInputStream
 import java.net.URI
 
 val APP_LOGGER = LoggerFactory.getLogger("main")!!
+val HTML_DATEMONTH_FORMAT = DateTimeFormat.forPattern("yyyy-MM")
 
 fun main() {
     APP_LOGGER.info("Starting application")

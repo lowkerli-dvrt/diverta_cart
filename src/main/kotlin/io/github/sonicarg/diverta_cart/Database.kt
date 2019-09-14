@@ -97,21 +97,25 @@ data class ShippingPrice(
 }
 
 object PrefectureTable: Table("prefecture") {
+    val id = integer("id").primaryKey()
     val name = varchar("name", 96)
     val region = reference("region", ShippingPriceTable.id, ReferenceOption.RESTRICT, ReferenceOption.RESTRICT)
 }
 
 data class Prefecture(
+    var id: Int,
     var name: String,
     var region: Int
 ) {
     companion object {
         fun fromResultRow(rr: ResultRow) = Prefecture(
+            rr[PrefectureTable.id],
             rr[PrefectureTable.name],
             rr[PrefectureTable.region]
         )
 
         fun fromJSON(json: JSONObject) = Prefecture(
+            json.getInt("id"),
             json.getString("name"),
             json.getInt("region")
         )
@@ -174,55 +178,56 @@ fun databaseInitIfEmpty() {
 
             PrefectureTable.batchInsert(
                 listOf(
-                    Prefecture("Tōkyō", 2),
-                    Prefecture("Chiba", 3),
-                    Prefecture("Kanagawa", 3),
-                    Prefecture("Saitama", 3),
-                    Prefecture("Gunma", 4),
-                    Prefecture("Ibaraki", 4),
-                    Prefecture("Tochigi", 4),
-                    Prefecture("Fukushima", 5),
-                    Prefecture("Miyagi", 5),
-                    Prefecture("Yamagata", 5),
-                    Prefecture("Hokkaido", 6),
-                    Prefecture("Akita", 7),
-                    Prefecture("Aomori", 7),
-                    Prefecture("Fukui", 7),
-                    Prefecture("Ishikawa", 7),
-                    Prefecture("Iwate", 7),
-                    Prefecture("Nagano", 7),
-                    Prefecture("Niigata", 7),
-                    Prefecture("Toyama", 7),
-                    Prefecture("Aichi", 8),
-                    Prefecture("Gifu", 8),
-                    Prefecture("Shizuoka", 8),
-                    Prefecture("Yamanashi", 8),
-                    Prefecture("Kyōto", 10),
-                    Prefecture("Nara", 10),
-                    Prefecture("Ōsaka", 10),
-                    Prefecture("Hyōgo", 11),
-                    Prefecture("Mie", 11),
-                    Prefecture("Shiga", 11),
-                    Prefecture("Wakayama", 11),
-                    Prefecture("Okayama", 12),
-                    Prefecture("Tottori", 12),
-                    Prefecture("Hiroshima", 13),
-                    Prefecture("Shimane", 13),
-                    Prefecture("Yamaguchi", 13),
-                    Prefecture("Ehime", 14),
-                    Prefecture("Kagawa", 14),
-                    Prefecture("Kōchi", 14),
-                    Prefecture("Tokushima", 14),
-                    Prefecture("Fukuoka", 15),
-                    Prefecture("Kagoshima", 15),
-                    Prefecture("Kumamoto", 15),
-                    Prefecture("Miyazaki", 15),
-                    Prefecture("Nagasaki", 15),
-                    Prefecture("Ōita", 15),
-                    Prefecture("Saga", 15),
-                    Prefecture("Okinawa", 16)
+                    Prefecture(1, "Hokkaido", 6),
+                    Prefecture(2, "Aomori", 7),
+                    Prefecture(3, "Iwate", 7),
+                    Prefecture(4, "Miyagi", 5),
+                    Prefecture(5, "Akita", 7),
+                    Prefecture(6, "Yamagata", 5),
+                    Prefecture(7, "Fukushima", 5),
+                    Prefecture(8, "Ibaraki", 4),
+                    Prefecture(9, "Tochigi", 4),
+                    Prefecture(10, "Gunma", 4),
+                    Prefecture(11, "Saitama", 3),
+                    Prefecture(12, "Chiba", 3),
+                    Prefecture(13, "Tōkyō", 2),
+                    Prefecture(14, "Kanagawa", 3),
+                    Prefecture(15, "Niigata", 7),
+                    Prefecture(16, "Toyama", 7),
+                    Prefecture(17, "Ishikawa", 7),
+                    Prefecture(18, "Fukui", 7),
+                    Prefecture(19, "Yamanashi", 8),
+                    Prefecture(20, "Nagano", 7),
+                    Prefecture(21, "Gifu", 8),
+                    Prefecture(22, "Shizuoka", 8),
+                    Prefecture(23, "Aichi", 8),
+                    Prefecture(24, "Mie", 11),
+                    Prefecture(25, "Shiga", 11),
+                    Prefecture(26, "Kyōto", 10),
+                    Prefecture(27, "Ōsaka", 10),
+                    Prefecture(28, "Hyōgo", 11),
+                    Prefecture(29, "Nara", 10),
+                    Prefecture(30, "Wakayama", 11),
+                    Prefecture(31, "Tottori", 12),
+                    Prefecture(32, "Shimane", 13),
+                    Prefecture(33, "Okayama", 12),
+                    Prefecture(34, "Hiroshima", 13),
+                    Prefecture(35, "Yamaguchi", 13),
+                    Prefecture(36, "Tokushima", 14),
+                    Prefecture(37, "Kagawa", 14),
+                    Prefecture(38, "Ehime", 14),
+                    Prefecture(39, "Kōchi", 14),
+                    Prefecture(40, "Fukuoka", 15),
+                    Prefecture(41, "Saga", 15),
+                    Prefecture(42, "Nagasaki", 15),
+                    Prefecture(43, "Kumamoto", 15),
+                    Prefecture(44, "Ōita", 15),
+                    Prefecture(45, "Miyazaki", 15),
+                    Prefecture(46, "Kagoshima", 15),
+                    Prefecture(47, "Okinawa", 16)
                 )
             ) {
+                this[PrefectureTable.id] = it.id
                 this[PrefectureTable.name] = it.name
                 this[PrefectureTable.region] = it.region
             }

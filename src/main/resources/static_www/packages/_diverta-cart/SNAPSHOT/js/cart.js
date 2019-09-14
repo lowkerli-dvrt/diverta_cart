@@ -56,7 +56,7 @@ function reloadView() {
         },
         always: function() {
             setTimeout(function() {
-                $cart_wrapper.waitMe('hide');
+                $cart_wrapper.waitMe("hide");
             }, 1000);
         }
     });
@@ -96,8 +96,8 @@ function updateView(cart_data) {
                         url: "ajax/cart",
                         method: "PATCH",
                         data: {
-                            "sku": sku,
-                            "qty": quant
+                            sku: sku,
+                            qty: quant
                         },
                         dataType: "JSON",
                         beforeSend: function() {
@@ -119,7 +119,7 @@ function updateView(cart_data) {
                         },
                         always: function() {
                             setTimeout(function() {
-                                $cart_wrapper.waitMe('hide');
+                                $cart_wrapper.waitMe("hide");
                             }, 1000);
                         }
                     });
@@ -155,7 +155,7 @@ function updateView(cart_data) {
                                 // Event fired when pressing the "X" at the end of each element
                                 evt.preventDefault();
                                 $modalProductName.text(pr["name"]);
-                                $modalProductSKU.text(pr["sku"])
+                                $modalProductSKU.text(pr["sku"]);
                                 //Show modal
                                 $removeProductModal.modal({ keyboard: true });
                             })
@@ -199,26 +199,24 @@ $(document).ready(function() {
             refreshSubtotals(cart_data.subTotal, cart_data.tax, selectedRegion.price);
             $checkout_region.val(selectedRegion.id);
             $("#delay").text(
-                selectedRegion.delay == 0 ?
-                "on the day" :
-                "within " + selectedRegion.delay + " business days"
+                selectedRegion.delay == 0 ? "on the day" : "within " + selectedRegion.delay + " business days"
             );
         })
         .selectpicker();
 
     // Correct some z-depths for properly see the dropdown
     $("button.dropdown-toggle").addClass("z-1000");
-    $("div.dropdown-menu").addClass("z-1050")
+    $("div.dropdown-menu").addClass("z-1050");
 
     // Initialize listeners for the modals
     $btnModal_removeConfirm.click(function(evt) {
         evt.preventDefault();
-        $removeProductModal.modal('hide');
+        $removeProductModal.modal("hide");
         $.ajax({
             method: "DELETE",
             url: "ajax/cart",
             data: {
-                "sku": $modalProductSKU.text()
+                sku: $modalProductSKU.text()
             },
             dataType: "JSON",
             beforeSend: function() {
@@ -227,10 +225,7 @@ $(document).ready(function() {
             success: function(data) {
                 cart_data = data["cart"];
                 console.log(cart_data);
-                toastr["success"](
-                    "The product was removed from your cart",
-                    "Product deleted successfully"
-                );
+                toastr["success"]("The product was removed from your cart", "Product deleted successfully");
                 updateView(cart_data);
             },
             error: function(err) {
@@ -241,7 +236,7 @@ $(document).ready(function() {
             },
             always: function() {
                 setTimeout(function() {
-                    $cart_wrapper.waitMe('hide');
+                    $cart_wrapper.waitMe("hide");
                 }, 1000);
             }
         });
@@ -249,12 +244,12 @@ $(document).ready(function() {
 
     $btn_emptyCart.click(function(evt) {
         evt.preventDefault();
-        $emptyCartModal.modal({keyboard: true});
+        $emptyCartModal.modal({ keyboard: true });
     });
 
     $btnModal_emptyConfirm.click(function(evt) {
         evt.preventDefault();
-        $emptyCartModal.modal('hide');
+        $emptyCartModal.modal("hide");
         $.ajax({
             method: "DELETE",
             url: "ajax/cart",
@@ -265,21 +260,15 @@ $(document).ready(function() {
             success: function(data) {
                 cart_data = data["cart"];
                 console.log(cart_data);
-                toastr["success"](
-                    "Time to fill it again!",
-                    "Cart emptied successfully"
-                );
+                toastr["success"]("Time to fill it again!", "Cart emptied successfully");
                 updateView(cart_data);
             },
             error: function(err) {
-                toastr["error"](
-                    "The cart could not be emptied (maybe a connection error?)",
-                    "Error while emptying"
-                );
+                toastr["error"]("The cart could not be emptied (maybe a connection error?)", "Error while emptying");
             },
             always: function() {
                 setTimeout(function() {
-                    $cart_wrapper.waitMe('hide');
+                    $cart_wrapper.waitMe("hide");
                 }, 1000);
             }
         });

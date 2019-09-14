@@ -1,7 +1,9 @@
 package io.github.sonicarg.diverta_cart.handlers.www
 
-import io.github.sonicarg.diverta_cart.*
-import io.github.sonicarg.diverta_cart.handlers.rest.ProcessedCart
+import io.github.sonicarg.diverta_cart.ShippingPrice
+import io.github.sonicarg.diverta_cart.ShippingPriceTable
+import io.github.sonicarg.diverta_cart.ShippingRegion
+import io.github.sonicarg.diverta_cart.ShippingRegionTable
 import io.javalin.http.Context
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
@@ -10,9 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object CartPageHandler {
     fun show(ctx: Context) {
-        val cart = ctx.sessionAttribute<MutableMap<Product, Int>>("cart")!!
         val vat = ctx.sessionAttribute<Double>("vat")!!
-        val processedCart = ProcessedCart(cart, vat)
 
         val shipRegions = transaction {
             ShippingRegionTable.selectAll().orderBy(ShippingRegionTable.id).map {
@@ -171,7 +171,7 @@ object CartPageHandler {
                                         hiddenInput {
                                             name = "region"
                                             id = "checkout_region"
-                                            value = "0"
+                                            value = "1"
                                         }
                                         button(type = ButtonType.submit, classes = "btn btn-success float-right") {
                                             formAction = "/checkout"

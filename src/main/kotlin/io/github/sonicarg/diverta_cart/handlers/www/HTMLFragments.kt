@@ -100,10 +100,7 @@ val PACKAGES_VERSIONS = mapOf(
     "creationix" to "gist-7435851",
     "fontawesome-free" to "5.10.2",
     "jquery" to "3.4.1",
-    "jscookie" to "2.2.1",
-    "js-sha256" to "0.9.0",
     "popper" to "1.15.0",
-    "sweetalert2" to "8.16.3",
     "toastr" to "2.1.4",
     "tooltip" to "1.3.2",
     "waitme" to "1.19"
