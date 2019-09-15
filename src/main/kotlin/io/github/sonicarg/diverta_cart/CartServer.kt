@@ -2,9 +2,11 @@ package io.github.sonicarg.diverta_cart
 
 import io.github.sonicarg.diverta_cart.handlers.rest.CartHandler
 import io.github.sonicarg.diverta_cart.handlers.rest.CheckoutHandler
+import io.github.sonicarg.diverta_cart.handlers.rest.MethodNotAllowedErrorHandler
 import io.github.sonicarg.diverta_cart.handlers.rest.ShippingHandler
 import io.github.sonicarg.diverta_cart.handlers.www.CartPageHandler
 import io.github.sonicarg.diverta_cart.handlers.www.CheckoutPageHandler
+import io.github.sonicarg.diverta_cart.handlers.www.ErrorPageHandler
 import io.github.sonicarg.diverta_cart.handlers.www.MainPageHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
@@ -109,12 +111,23 @@ class CartServer(configJSON: JSONObject = JSONObject()) : HttpServlet() {
                         if ("sku" in ctx.formParamMap()) CartHandler.remove(ctx)
                         else CartHandler.empty(ctx)
                     }
+                    head { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
                 }
                 path("checkout") {
+                    get { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
                     post { ctx -> CheckoutHandler.doPayment(ctx) }
+                    put { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
+                    patch { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
+                    delete { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
+                    head { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
                 }
                 path("shipping") {
                     get { ctx -> ShippingHandler.list(ctx) }
+                    post { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
+                    put { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
+                    patch { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
+                    delete { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
+                    head { ctx -> MethodNotAllowedErrorHandler.showError(ctx) }
                 }
             }
         }!!.events { events ->
@@ -131,7 +144,17 @@ class CartServer(configJSON: JSONObject = JSONObject()) : HttpServlet() {
                 stop()
                 exitProcess(1)
             }
-        }
+        }!!.error(400) {
+                ctx -> ErrorPageHandler.show(ctx)
+        }!!.error(404) {
+                ctx -> ErrorPageHandler.show(ctx)
+        }!!.error(405) {
+                ctx -> ErrorPageHandler.show(ctx)
+        }!!.error(500) {
+                ctx -> ErrorPageHandler.show(ctx)
+        }!!.error(503) {
+                ctx -> ErrorPageHandler.show(ctx)
+        }!!
     }
 
     fun start(port: Int = this.port) {

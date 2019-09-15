@@ -45,41 +45,58 @@ object MainPageHandler {
                     h2 { text("Our products") }
 
                     div("row") {
-                        for (p: Product in matchingProducts) {
-                            val priceWithoutVAT = p.price
-                            val productVAT = (priceWithoutVAT * vat).toLong()
-                            val priceWithVAT = priceWithoutVAT + productVAT
-                            div("col-3 mb-3") {
-                                div("card") {
-                                    img(src = productImagePath(p.sku), alt = p.name, classes = "card-img-top")
-                                    div("card-body") {
-                                        h5("card-title text-truncate") { text(p.name) }
-                                        //DB = Price without the tax - WWW = Price with tax
-                                        p("card-text text-right") {
-                                            span("tooltip-price") {
-                                                attributes.apply {
-                                                    put("data-toggle", "tooltip")
-                                                    put(
-                                                        "title",
-                                                        "Price: <span class='price'>$priceWithoutVAT</span><br>" +
-                                                                "VAT: <span class='price'>$productVAT</span>"
-                                                    )
-                                                    put("data-html", true.toString())
+                        if (matchingProducts.isEmpty()) {
+                            div("col-1")
+                            div("col-10 text-center text-warning") {
+                                h2 {
+                                    i("fas fa-exclamation-circle")
+                                }
+                                h4 {
+                                    text(
+                                        "Sorry, we could not found what you were looking for. " +
+                                        "Try searching again with other words."
+                                    )
+                                }
+                            }
+                            div("col-1")
+                        }
+                        else {
+                            for (p: Product in matchingProducts) {
+                                val priceWithoutVAT = p.price
+                                val productVAT = (priceWithoutVAT * vat).toLong()
+                                val priceWithVAT = priceWithoutVAT + productVAT
+                                div("col-3 mb-3") {
+                                    div("card") {
+                                        img(src = productImagePath(p.sku), alt = p.name, classes = "card-img-top")
+                                        div("card-body") {
+                                            h5("card-title text-truncate") { text(p.name) }
+                                            //DB = Price without the tax - WWW = Price with tax
+                                            p("card-text text-right") {
+                                                span("tooltip-price") {
+                                                    attributes.apply {
+                                                        put("data-toggle", "tooltip")
+                                                        put(
+                                                            "title",
+                                                            "Price: <span class='price'>$priceWithoutVAT</span><br>" +
+                                                                    "VAT: <span class='price'>$productVAT</span>"
+                                                        )
+                                                        put("data-html", true.toString())
+                                                    }
+                                                    span("price") { text(priceWithVAT) }
+                                                    Entities.nbsp
+                                                    Entities.nbsp
+                                                    small("price_tooltip") { text(" - VAT incl.") }
                                                 }
-                                                span("price") { text(priceWithVAT) }
-                                                Entities.nbsp
-                                                Entities.nbsp
-                                                small("price_tooltip") { text(" - VAT incl.") }
                                             }
-                                        }
-                                        div("text-right") {
-                                            a(classes = "btn btn-sm btn-success") {
-                                                attributes.apply {
-                                                    put("data-toggle", "tooltip")
-                                                    put("title", "Add to cart")
+                                            div("text-right") {
+                                                a(classes = "btn btn-sm btn-success") {
+                                                    attributes.apply {
+                                                        put("data-toggle", "tooltip")
+                                                        put("title", "Add to cart")
+                                                    }
+                                                    id = "btn_addProduct_${p.sku}"
+                                                    i("fas fa-plus")
                                                 }
-                                                id = "btn_addProduct_${p.sku}"
-                                                i("fas fa-plus")
                                             }
                                         }
                                     }

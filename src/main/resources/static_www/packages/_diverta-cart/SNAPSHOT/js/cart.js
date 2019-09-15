@@ -51,7 +51,6 @@ function reloadView() {
         },
         success: function(data) {
             cart_data = data["cart"];
-            console.log(cart_data);
             updateView(cart_data);
         },
         always: function() {
@@ -63,6 +62,8 @@ function reloadView() {
 }
 
 function updateView(cart_data) {
+    updateCartTotalsNavbar(1000);
+
     //Clear table contents
     $cart_contents_table.empty();
 
@@ -111,7 +112,6 @@ function updateView(cart_data) {
                             );
                         },
                         error: function(err) {
-                            console.log(err);
                             toastr["error"](
                                 "The product quantity could not be modified (maybe a connection error?)",
                                 "Error in modifying quantity"
@@ -224,7 +224,6 @@ $(document).ready(function() {
             },
             success: function(data) {
                 cart_data = data["cart"];
-                console.log(cart_data);
                 toastr["success"]("The product was removed from your cart", "Product deleted successfully");
                 updateView(cart_data);
             },
@@ -259,7 +258,6 @@ $(document).ready(function() {
             },
             success: function(data) {
                 cart_data = data["cart"];
-                console.log(cart_data);
                 toastr["success"]("Time to fill it again!", "Cart emptied successfully");
                 updateView(cart_data);
             },

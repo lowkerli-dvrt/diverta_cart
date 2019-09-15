@@ -47,9 +47,11 @@ accounting.settings = {
     }
 };
 
+//Global vars
+var spanCartTotals = $("span#cartTotals");
+
 function updateCartTotalsNavbar(uiDelay) {
     uiDelay = typeof uiDelay == "undefined" ? 1000 : uiDelay;
-    var spanCartTotals = $("span#cartTotals");
     $.ajax({
         method: "GET",
         url: "ajax/cart",
@@ -112,7 +114,6 @@ $(document).ready(function() {
                 return i.outerHTML !== undefined ? i.outerHTML : i.textContent;
             })
             .join("");
-        console.log(newTitle);
         $this_tooltip.attr("title", newTitle);
     });
 

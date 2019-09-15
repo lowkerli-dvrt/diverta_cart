@@ -78,11 +78,11 @@ object CheckoutPageHandler {
                                     }
                                     div("form-group") {
                                         label {
-                                            htmlFor = "cityDistrict_1_2"
+                                            htmlFor = "ward_1_2"
                                             text("Ward (区)")
                                         }
                                         textInput(classes = "form-control") {
-                                            id = "cityDistrict_1_2"
+                                            id = "ward_1_2"
                                             placeholder = "e.g. Shinjuku"
                                         }
                                     }
@@ -118,7 +118,7 @@ object CheckoutPageHandler {
                                             required = true
                                         }
                                         small("form-text text-muted") {
-                                            id = "cardNumberHelper"
+                                            id = "postCode_1_2Helper"
                                             text("Must be 7 digits")
                                         }
                                     }
@@ -406,11 +406,12 @@ object CheckoutPageHandler {
                                     id = "postConfirmEmail"
                                     text("<test@email>")
                                 }
-                                text("). ")
+                                text(").")
+                                br { }
                                 span("font-italic") {
                                     text(
                                         "Please, check your SPAM folder in case it did not arrive into your inbox " +
-                                            "directly"
+                                            "directly."
                                     )
                                 }
                             }

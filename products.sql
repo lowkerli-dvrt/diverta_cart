@@ -15,13 +15,13 @@
 DELETE FROM `products`;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
 INSERT INTO `products` (`sku`, `name`, `price`) VALUES
+	('0013803307627', 'Canon laser color printer MF644CDW', 48699),
 	('0020356620370', 'TDK Blank CD - 100 unit bulk', 1689),
 	('0619659078645', 'Sandisk microSD card 32GB, Class 10', 990),
 	('0794163167471', 'HeimVision 1080p WiFi IP Camera', 2999),
+	('4712900000000', 'ASUS 23 inch Frameless Monitor VZ249HE', 10499),
 	('6935364050993', 'TP-LINK WiFi Router AC1200 (802.11ac)', 3399);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
-
-SELECT * FROM `products`;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
