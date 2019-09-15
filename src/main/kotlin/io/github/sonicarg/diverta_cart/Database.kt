@@ -1,7 +1,5 @@
 package io.github.sonicarg.diverta_cart
 
-import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.dao.IdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.json.JSONObject
@@ -16,13 +14,13 @@ import kotlin.system.exitProcess
  */
 
 object ProductsTable : Table("products") {
-    val sku = long("sku").primaryKey()
+    val sku = varchar("sku", 20).primaryKey()
     val name = varchar("name", 64)
     val price = long("price")
 }
 
 data class Product(
-    var sku: Long,
+    var sku: String,
     var name: String,
     var price: Long
 ) {
@@ -34,7 +32,7 @@ data class Product(
         )
 
         fun fromJSON(json: JSONObject) = Product(
-            json.getLong("sku"),
+            json.getString("sku"),
             json.getString("name"),
             json.getLong("price")
         )
@@ -50,15 +48,17 @@ data class ShippingRegion(
     var id: Int,
     var name: String
 ) {
-    fun fromResultRow(rr: ResultRow) = ShippingRegion(
-        rr[ShippingRegionTable.id],
-        rr[ShippingRegionTable.name]
-    )
+    companion object {
+        fun fromResultRow(rr: ResultRow) = ShippingRegion(
+            rr[ShippingRegionTable.id],
+            rr[ShippingRegionTable.name]
+        )
 
-    fun fromJSON(json: JSONObject) = ShippingRegion(
-        json.getInt("id"),
-        json.getString("name")
-    )
+        fun fromJSON(json: JSONObject) = ShippingRegion(
+            json.getInt("id"),
+            json.getString("name")
+        )
+    }
 }
 
 object ShippingPriceTable : Table("shipping") {
@@ -77,30 +77,61 @@ data class ShippingPrice(
     var price: Long,
     var delay: Int
 ) {
-    fun fromResultRow(rr: ResultRow) = ShippingPrice(
-        rr[ShippingPriceTable.id],
-        rr[ShippingPriceTable.name],
-        rr[ShippingPriceTable.region],
-        rr[ShippingPriceTable.price],
-        rr[ShippingPriceTable.delay]
-    )
+    companion object {
+        fun fromResultRow(rr: ResultRow) = ShippingPrice(
+            rr[ShippingPriceTable.id],
+            rr[ShippingPriceTable.name],
+            rr[ShippingPriceTable.region],
+            rr[ShippingPriceTable.price],
+            rr[ShippingPriceTable.delay]
+        )
 
-    fun fromJSON(json: JSONObject) = ShippingPrice(
-        json.getInt("id"),
-        json.getString("name"),
-        json.getInt("region"),
-        json.getLong("price"),
-        json.getInt("delay")
-    )
+        fun fromJSON(json: JSONObject) = ShippingPrice(
+            json.getInt("id"),
+            json.getString("name"),
+            json.getInt("region"),
+            json.getLong("price"),
+            json.getInt("delay")
+        )
+    }
 }
 
+object PrefectureTable: Table("prefecture") {
+    val id = integer("id").primaryKey()
+    val name = varchar("name", 96)
+    val region = reference("region", ShippingPriceTable.id, ReferenceOption.RESTRICT, ReferenceOption.RESTRICT)
+}
+
+data class Prefecture(
+    var id: Int,
+    var name: String,
+    var region: Int
+) {
+    companion object {
+        fun fromResultRow(rr: ResultRow) = Prefecture(
+            rr[PrefectureTable.id],
+            rr[PrefectureTable.name],
+            rr[PrefectureTable.region]
+        )
+
+        fun fromJSON(json: JSONObject) = Prefecture(
+            json.getInt("id"),
+            json.getString("name"),
+            json.getInt("region")
+        )
+    }
+}
+
+// --- Routine to initialize the database ---
+// NB: This does not include products at all
 fun databaseInitIfEmpty() {
     transaction {
         try {
             SchemaUtils.create(
                 ProductsTable,
                 ShippingRegionTable,
-                ShippingPriceTable
+                ShippingPriceTable,
+                PrefectureTable
             )
 
             ShippingRegionTable.batchInsert(
@@ -143,6 +174,62 @@ fun databaseInitIfEmpty() {
                 this[ShippingPriceTable.region] = it.region
                 this[ShippingPriceTable.price] = it.price
                 this[ShippingPriceTable.delay] = it.delay
+            }
+
+            PrefectureTable.batchInsert(
+                listOf(
+                    Prefecture(1, "Hokkaido", 6),
+                    Prefecture(2, "Aomori", 7),
+                    Prefecture(3, "Iwate", 7),
+                    Prefecture(4, "Miyagi", 5),
+                    Prefecture(5, "Akita", 7),
+                    Prefecture(6, "Yamagata", 5),
+                    Prefecture(7, "Fukushima", 5),
+                    Prefecture(8, "Ibaraki", 4),
+                    Prefecture(9, "Tochigi", 4),
+                    Prefecture(10, "Gunma", 4),
+                    Prefecture(11, "Saitama", 3),
+                    Prefecture(12, "Chiba", 3),
+                    Prefecture(13, "Tōkyō", 2),
+                    Prefecture(14, "Kanagawa", 3),
+                    Prefecture(15, "Niigata", 7),
+                    Prefecture(16, "Toyama", 7),
+                    Prefecture(17, "Ishikawa", 7),
+                    Prefecture(18, "Fukui", 7),
+                    Prefecture(19, "Yamanashi", 8),
+                    Prefecture(20, "Nagano", 7),
+                    Prefecture(21, "Gifu", 8),
+                    Prefecture(22, "Shizuoka", 8),
+                    Prefecture(23, "Aichi", 8),
+                    Prefecture(24, "Mie", 11),
+                    Prefecture(25, "Shiga", 11),
+                    Prefecture(26, "Kyōto", 10),
+                    Prefecture(27, "Ōsaka", 10),
+                    Prefecture(28, "Hyōgo", 11),
+                    Prefecture(29, "Nara", 10),
+                    Prefecture(30, "Wakayama", 11),
+                    Prefecture(31, "Tottori", 12),
+                    Prefecture(32, "Shimane", 13),
+                    Prefecture(33, "Okayama", 12),
+                    Prefecture(34, "Hiroshima", 13),
+                    Prefecture(35, "Yamaguchi", 13),
+                    Prefecture(36, "Tokushima", 14),
+                    Prefecture(37, "Kagawa", 14),
+                    Prefecture(38, "Ehime", 14),
+                    Prefecture(39, "Kōchi", 14),
+                    Prefecture(40, "Fukuoka", 15),
+                    Prefecture(41, "Saga", 15),
+                    Prefecture(42, "Nagasaki", 15),
+                    Prefecture(43, "Kumamoto", 15),
+                    Prefecture(44, "Ōita", 15),
+                    Prefecture(45, "Miyazaki", 15),
+                    Prefecture(46, "Kagoshima", 15),
+                    Prefecture(47, "Okinawa", 16)
+                )
+            ) {
+                this[PrefectureTable.id] = it.id
+                this[PrefectureTable.name] = it.name
+                this[PrefectureTable.region] = it.region
             }
         }
         catch (e: SQLException) {

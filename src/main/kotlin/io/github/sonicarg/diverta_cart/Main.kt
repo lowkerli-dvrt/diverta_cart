@@ -1,5 +1,6 @@
 package io.github.sonicarg.diverta_cart
 
+import org.joda.time.format.DateTimeFormat
 import org.json.JSONObject
 import org.json.JSONTokener
 import org.slf4j.LoggerFactory
@@ -8,6 +9,7 @@ import java.io.FileInputStream
 import java.net.URI
 
 val APP_LOGGER = LoggerFactory.getLogger("main")!!
+val HTML_DATEMONTH_FORMAT = DateTimeFormat.forPattern("yyyy-MM")
 
 fun main() {
     APP_LOGGER.info("Starting application")
@@ -17,8 +19,8 @@ fun main() {
 
     val port: Int = config.getJSONObject("server").getInt("port")
     APP_LOGGER.info("Starting server at port $port")
-    CartServer.config = config
-    CartServer.start()
+    val cs = CartServer(config)
+    cs.start()
 
     if (config.getJSONObject("ui").getBoolean("autoBrowserLaunch")) {
         APP_LOGGER.info("Starting default web browser as per config (ui/autoBrowserLaunch=true)")
@@ -36,7 +38,7 @@ fun main() {
     Runtime.getRuntime().addShutdownHook(object : Thread() {
         override fun run() {
             APP_LOGGER.info("A SIGINT (aka CTRL+C) signal was received. Shutting down now.")
-            CartServer.stop()
+            cs.stop()
         }
     })
 }

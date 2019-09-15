@@ -12,6 +12,7 @@
     "port": 10080
   },
   "ui": {
-    "autoBrowserLaunch": true
+    "autoBrowserLaunch": true,
+    "vat": 0.1
   }
 }

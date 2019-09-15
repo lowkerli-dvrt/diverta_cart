@@ -1,0 +1,84 @@
+nav {
+  position: fixed;
+  top: 0;
+  padding: 0 16px 0 16px !important;
+}
+
+.navbar-brand {
+  font-size: 2rem;
+}
+
+nav form {
+    margin-block-end: 0 !important;
+}
+
+main {
+  padding: 64px 16px 64px 16px !important;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.card-img-top {
+  display: block;
+  max-height: 180px;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+}
+
+.icon {
+  display: block;
+  max-height: 32px;
+  width: auto;
+  height: auto;
+  margin: 2px 8px 2px 8px;
+}
+
+.kbd {
+    position: relative;
+    display: inline-block;
+    margin: 0 1px 2px;
+    padding: 4px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+    background: #fafafa;
+    font-family: inherit;
+    line-height: 1em;
+    -webkit-transition: 0.6s background-color;
+    transition: 0.6s background-color;
+    color: #000;
+}
+
+td {
+  padding: 2px 6px;
+}
+
+td.w-60 {
+  width: 60%;
+}
+
+td.w-30 {
+  width: 30%;
+}
+
+td.w-10 {
+  width: 10%;
+}
+
+.z-1000 {
+  z-index: 1000 !important;
+}
+
+.z-1030 {
+  z-index: 1030 !important;
+}
+
+.z-1050 {
+  z-index: 1050 !important;
+}
