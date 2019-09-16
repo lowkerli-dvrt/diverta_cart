@@ -1,0 +1,1 @@
+java -cp "lib/*" io.github.sonicarg.diverta_cart.MainKt

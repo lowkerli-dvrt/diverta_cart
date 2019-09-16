@@ -63,3 +63,12 @@ task configFilesLaunch4J(type: Copy) {
     into 'build/launch4j'
 }
 configFilesLaunch4J.dependsOn(createAllExecutables, createExe)
+
+task linuxLaunch4J(type: Copy) {
+    from fileTree(
+            dir: '.',
+            includes: ['diverta-cart.sh']
+    )
+    into 'build/launch4j'
+}
+linuxLaunch4J.dependsOn(configFilesLaunch4J)
