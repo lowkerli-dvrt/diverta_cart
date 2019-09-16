@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.charset.StandardCharsets
 import javax.servlet.http.HttpServlet
-import kotlin.system.exitProcess
 
 class CartServer(configJSON: JSONObject = JSONObject()) : HttpServlet() {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -133,16 +132,7 @@ class CartServer(configJSON: JSONObject = JSONObject()) : HttpServlet() {
         }!!.events { events ->
             events.serverStarting {
                 Database.connect(url, driver, user, password)
-                databaseInitIfEmpty()
-            }
-            events.serverStartFailed {
-                logger.error(
-                    "There was an error initializing the server. " +
-                            "Refer to the log file to detect the error that caused it and retry again. " +
-                            "Application will exit now"
-                )
-                stop()
-                exitProcess(1)
+                databaseInitIfEmpty(this@CartServer)
             }
         }!!.error(400) {
                 ctx -> ErrorPageHandler.show(ctx)

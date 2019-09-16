@@ -3,7 +3,9 @@ package io.github.sonicarg.diverta_cart
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.json.JSONObject
+import java.awt.GraphicsEnvironment
 import java.sql.SQLException
+import javax.swing.JOptionPane
 import kotlin.system.exitProcess
 
 /*
@@ -124,7 +126,7 @@ data class Prefecture(
 
 // --- Routine to initialize the database ---
 // NB: This does not include products at all
-fun databaseInitIfEmpty() {
+fun databaseInitIfEmpty(cartServer: CartServer) {
     transaction {
         try {
             SchemaUtils.create(
@@ -237,10 +239,22 @@ fun databaseInitIfEmpty() {
     Skip it, as this is caused by duplicate keys, which means our data was previously inside
     the database
 */
-        }
-        catch (e: Exception) {
-            //The rest of exceptions should be captured and force the app to close
-            APP_LOGGER.error("An exception has been caught while intializing. Exception dump follows:", e)
+        } catch (e: ExceptionInInitializerError) {
+            APP_LOGGER.error(
+                "Error while connecting to the database; please check if it is running and try again."
+            )
+            if (!GraphicsEnvironment.isHeadless()) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Error while connecting to the database;\n" +
+                            "please check if it is running and try again.",
+                    "Error on starting server",
+                    JOptionPane.ERROR_MESSAGE
+                )
+            } else {
+                readLine()
+            }
+            cartServer.stop()
             exitProcess(0)
         }
     }
