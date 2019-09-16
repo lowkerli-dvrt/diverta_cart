@@ -35,13 +35,11 @@ object CartPageHandler {
                 loadCSS("waitme", "waitme.min.css")
             }
             body {
+                a { id = "top" }
                 navbar(ctx)
                 main {
-                    a { id = "top" }
-
                     // Content of page begins here
                     h2 { text("Your cart") }
-
                     div("row") {
                         div("col") // Ignored for alignment
                         div("col-10") {
@@ -222,7 +220,7 @@ object CartPageHandler {
                                         text("Product")
                                     }
                                 }
-                                div("d-none") { 
+                                div("d-none") {
                                     span {
                                         id = "modalProductSKU"
                                         text("0")

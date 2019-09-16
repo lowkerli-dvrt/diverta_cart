@@ -22,6 +22,7 @@ object ErrorPageHandler {
                 commonCSS()
             }
             body {
+                a { id = "top" }
                 navbar(ctx)
                 main {
                     div("row") {

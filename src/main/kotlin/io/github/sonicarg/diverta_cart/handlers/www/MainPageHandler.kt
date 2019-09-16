@@ -36,14 +36,11 @@ object MainPageHandler {
                 commonCSS()
             }
             body {
+                a { id = "top" }
                 navbar(ctx)
                 main {
-                    a { id = "top" }
-
                     // Content of page begins here
-
                     h2 { text("Our products") }
-
                     div("row") {
                         if (matchingProducts.isEmpty()) {
                             div("col-1")
@@ -54,13 +51,12 @@ object MainPageHandler {
                                 h4 {
                                     text(
                                         "Sorry, we could not found what you were looking for. " +
-                                        "Try searching again with other words."
+                                                "Try searching again with other words."
                                     )
                                 }
                             }
                             div("col-1")
-                        }
-                        else {
+                        } else {
                             for (p: Product in matchingProducts) {
                                 val priceWithoutVAT = p.price
                                 val productVAT = (priceWithoutVAT * vat).toLong()

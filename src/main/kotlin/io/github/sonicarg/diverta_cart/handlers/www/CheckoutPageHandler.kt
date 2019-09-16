@@ -33,16 +33,14 @@ object CheckoutPageHandler {
                 loadCSS("waitme", "waitme.min.css")
             }
             body {
+                a { id = "top" }
                 navbar(ctx)
                 main {
-                    a { id = "top" }
-
                     // Content of page begins here
                     p("d-none") {
                         id = "region"
                         text(region!!)
                     }
-
                     h2 { text("Shipping details & checkout") }
                     form() {
                         id = "shippingPurchaseForm"
@@ -400,7 +398,7 @@ object CheckoutPageHandler {
                             div("modal-body") {
                                 text(
                                     "Thank you for your purchase! In a few minutes, you will receive the invoice and " +
-                                    "the tracking code in the mail address given ("
+                                            "the tracking code in the mail address given ("
                                 )
                                 span("text-monospace") {
                                     id = "postConfirmEmail"
@@ -411,7 +409,7 @@ object CheckoutPageHandler {
                                 span("font-italic") {
                                     text(
                                         "Please, check your SPAM folder in case it did not arrive into your inbox " +
-                                            "directly."
+                                                "directly."
                                     )
                                 }
                             }
